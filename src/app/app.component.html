@@ -1,0 +1,47 @@
+<ion-app>
+    <ion-split-pane>
+        <ion-menu class="app-sidemenu">
+            <ion-content>
+                <ion-row class="user-details-wrapper">
+                    <ion-col size="4">
+                        <app-preload-image class="user-avatar add-spinner" [ratio]="{w:1, h:1}"
+                                           src="/assets/img/logoalitour.jpg"></app-preload-image>
+                    </ion-col>
+                    <ion-col *ngIf="user" class="user-info-wrapper" size="8">
+                        <h3 text-capitalize class="user-name">{{ user.username }}</h3>
+                    </ion-col>
+                </ion-row>
+                <ion-list>
+                    <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+                        <ion-item [routerLink]="p.url" routerLinkActive="active" routerDirection="root">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                </ion-list>
+                <ion-list>
+                    <ion-menu-toggle auto-hide="false" *ngFor="let p of accountPages; let i = index">
+                        <ion-item [routerLink]="p.url" routerLinkActive="active" routerDirection="root">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                    <ion-menu-toggle auto-hide="false">
+                        <ion-item (click)="authService.logout(true)">
+                            <ion-icon slot="start" [name]="'log-in'"></ion-icon>
+                            <ion-label>
+                                Cerrar sesión
+                            </ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                </ion-list>
+            </ion-content>
+        </ion-menu>
+        <!-- Main app content get's rendered in this router-outlet -->
+        <ion-router-outlet main></ion-router-outlet>
+    </ion-split-pane>
+</ion-app>

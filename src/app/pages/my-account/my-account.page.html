@@ -1,0 +1,71 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Mi cuenta
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form *ngIf="registerForm" [formGroup]="registerForm">
+        <ion-grid>
+            <ion-row color="primary" justify-content-center>
+                <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+                    <div padding>
+                        <ion-item>
+                            <ion-label color="primary" position="floating">Nombres</ion-label>
+                            <ion-input formControlName="nombre" type="text" placeholder="Nombres"
+                                       required></ion-input>
+                        </ion-item>
+                        <input-error-message [control]="registerForm.get('nombre')"></input-error-message>
+                        <ion-item>
+                            <ion-label color="primary" position="floating">Apellido Paterno</ion-label>
+                            <ion-input formControlName="apellido_paterno" type="text" placeholder="Apellido Paterno"
+                                       required></ion-input>
+                        </ion-item>
+                        <input-error-message [control]="registerForm.get('apellido_paterno')"></input-error-message>
+
+                        <ion-item>
+                            <ion-label color="primary" position="floating">Apellido Materno</ion-label>
+                            <ion-input formControlName="apellido_materno" type="text" placeholder="Apellido Materno"
+                                       required></ion-input>
+                        </ion-item>
+                        <input-error-message [control]="registerForm.get('apellido_materno')"></input-error-message>
+
+                        <ion-item>
+                            <ion-label color="primary" position="floating">Celular</ion-label>
+                            <ion-input formControlName="telefono1" type="tel" placeholder="Celular"
+                                       required></ion-input>
+                        </ion-item>
+                        <input-error-message [control]="registerForm.get('telefono1')"></input-error-message>
+                        <ion-item>
+                            <ion-label color="primary" position="floating">Correo electónico</ion-label>
+                            <ion-input formControlName="correo" type="email" placeholder="Correo electónico"
+                                       required></ion-input>
+                        </ion-item>
+                        <input-error-message [control]="registerForm.get('correo')"></input-error-message>
+
+                        <ion-item>
+                            <ion-label color="primary" position="floating">Username</ion-label>
+                            <ion-input formControlName="username" type="text" placeholder="Apellido Materno"
+                                       required></ion-input>
+                        </ion-item>
+                        <input-error-message [control]="registerForm.get('username')"></input-error-message>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button (click)="save()" shape="round" [disabled]="registerForm?.invalid || !registerForm?.touched"
+                    expand="full">
+            Guardar
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

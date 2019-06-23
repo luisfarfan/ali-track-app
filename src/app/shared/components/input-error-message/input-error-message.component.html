@@ -1,0 +1,4 @@
+<div class="error-container" [hidden]="!shouldShowErrors()"
+     *ngFor="let error of listErrors(); trackBy: trackByFn">
+    <span>{{ error }}</span>
+</div>

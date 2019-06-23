@@ -1,0 +1,61 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Viajes
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-card>
+        <ion-card-content *ngIf="user && travel">
+            <ion-item>
+                <ion-avatar slot="start">
+                    <img src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y">
+                </ion-avatar>
+                <ion-label>{{ 'Pasajero: ' + user.username }}</ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="calendar" slot="start"></ion-icon>
+                <ion-label>{{ 'Fecha: ' + (travel.starttask | date:'short') }}</ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="time" slot="start"></ion-icon>
+                <ion-label>{{ 'Hora Inicio: ' + (travel.starttask | date:'hh:mm') }}</ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-icon name="time" slot="start"></ion-icon>
+                <ion-label>{{ 'Hora Fin: ' + (travel.endtask | date:'hh:mm') }}</ion-label>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="travelForm" [formGroup]="travelForm">
+        <rating readonly="false" formControlName="rating"
+                size="default">
+        </rating>
+    </div>
+
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>Firma:</ion-card-subtitle>
+        </ion-card-header>
+        <app-preload-image class="user-avatar add-spinner" [ratio]="{w:1, h:1}" *ngIf="travel?.signature"
+                           [src]="travel?.signature"></app-preload-image>
+
+        <signature-pad *ngIf="!travel?.signature" [options]="signaturePadOptions" (onBeginEvent)="drawStart()"
+                       (onEndEvent)="drawComplete()"></signature-pad>
+    </ion-card>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar *ngIf="!travel?.rating">
+        <ion-button (click)="saveTravel()" [disabled]="travelForm?.invalid" shape="round" expand="full">
+            Finalizar
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>

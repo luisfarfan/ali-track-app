@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/login"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Registro exitoso!</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-row align-items-center>
+        <ion-col size="6" size-lg offset="3">
+            <ion-icon [ngStyle]="{'color': 'green'}" style="font-size: 140px" name="checkmark"></ion-icon>
+        </ion-col>
+    </ion-row>
+    <ion-row align-items-center paddinglui>
+        <ion-col padding>
+            <h1 color="primary" text-wrap text-center
+                class="bold">{{ 'Se ha enviado un email a su correo electrónico, muchas gracias por registrarse en SURCO ALERTA!' }}</h1>
+        </ion-col>
+    </ion-row>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button routerLink="/login" routerDirection="backward" shape="round" color="light" expand="full">
+            Regresar
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>
