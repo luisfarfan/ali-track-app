@@ -8,8 +8,6 @@ const routes: Routes = [
     {path: 'login', loadChildren: './pages/login/login.module#LoginPageModule', canLoad: [CheckIsLoggedService]},
     {path: 'register', loadChildren: './pages/register/register.module#RegisterPageModule'},
     {path: 'register-success', loadChildren: './pages/register-success/register-success.module#RegisterSuccessPageModule'},
-    {path: 'travels', loadChildren: './pages/travels/travels.module#TravelsPageModule'},
-    {path: 'my-travels', loadChildren: './pages/my-travels/my-travels.module#MyTravelsPageModule'},
     {path: 'apps/travels/:id', loadChildren: './pages/travel-detail/travel-detail.module#TravelDetailPageModule'},
 ];
 

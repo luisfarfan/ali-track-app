@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Observación</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-item>
+        <ion-label position="floating">Observación</ion-label>
+        <ion-textarea [rows]="8" [cols]="20" [(ngModel)]="observation"></ion-textarea>
+    </ion-item>
+    <ion-toolbar>
+        <ion-row>
+            <ion-col>
+                <ion-button (click)="modalCtrl.dismiss(observation)" shape="round" expand="full">
+                    Agregar observación
+                </ion-button>
+            </ion-col>
+            <ion-col>
+                <ion-button (click)="modalCtrl.dismiss()" color="danger" shape="round" expand="full">
+                    Regresar
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-toolbar>
+</ion-content>

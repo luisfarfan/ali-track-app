@@ -61,7 +61,7 @@ export class TravelsPage implements OnInit, OnDestroy {
         this.travels = this.travels.map(t => {
             t.url = t.start_latitude ? generateMapBoxStaticImage(t.start_longitude, t.start_latitude, 13) : this.defaultMapUrl;
             return t;
-        });
+        }).filter(t => !(t.starttask && t.endtask));
     }
 
     async addTravel(): Promise<void> {
@@ -89,6 +89,9 @@ export class TravelsPage implements OnInit, OnDestroy {
         await this.loading.dismiss();
         this.getTravels();
         this.presentToast(init);
+        if (!init) {
+            this.goTravelDetail(tracking.id);
+        }
     }
 
     ngOnDestroy(): void {

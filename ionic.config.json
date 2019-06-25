@@ -1,5 +1,5 @@
 {
-  "name": "alerta-surco-v2",
+  "name": "tracking-app",
   "integrations": {
     "cordova": {}
   },

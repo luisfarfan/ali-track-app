@@ -9,6 +9,8 @@ import { TravelDetailPage } from './travel-detail.page';
 import { IonicRatingModule } from 'ionic4-rating/dist';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { SharedModule } from '../../shared/shared.module';
+import { AddObservationPage } from '../../modals/add-observation/add-observation.page';
+import { AddObservationPageModule } from '../../modals/add-observation/add-observation.module';
 
 const routes: Routes = [
     {
@@ -26,7 +28,9 @@ const routes: Routes = [
         IonicRatingModule,
         SignaturePadModule,
         SharedModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+
+        AddObservationPageModule
     ],
     declarations: [TravelDetailPage]
 })

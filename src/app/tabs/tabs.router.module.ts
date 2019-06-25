@@ -17,6 +17,15 @@ const routes: Routes = [
                 ]
             },
             {
+                path: 'my-travels',
+                children: [
+                    {
+                        path: '',
+                        loadChildren: '../pages/my-travels/my-travels.module#MyTravelsPageModule'
+                    }
+                ]
+            },
+            {
                 path: 'my-account',
                 children: [
                     {

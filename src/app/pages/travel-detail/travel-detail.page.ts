@@ -7,7 +7,8 @@ import { KEY_USER_STORAGE } from '../../const';
 import { IUser, IUserTracking } from '../../interfaces/user';
 import { UserService } from '../../providers/user.service';
 import to from 'await-to-js';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { AddObservationPage } from '../../modals/add-observation/add-observation.page';
 
 @Component({
     selector: 'app-travel-detail',
@@ -38,7 +39,9 @@ export class TravelDetailPage implements OnInit, AfterViewInit {
                 private storage: Storage,
                 private userService: UserService,
                 private loadingController: LoadingController,
-                private toastController: ToastController) {
+                private toastController: ToastController,
+                private modalController: ModalController,
+                private navController: NavController) {
         this.route.params.subscribe(params => {
             this.id = params.id;
 
@@ -81,6 +84,7 @@ export class TravelDetailPage implements OnInit, AfterViewInit {
         const [error, travel] = await to(this.userService.patchTravel(this.id, tracking).toPromise());
         await this.loading.dismiss();
         this.presentToast();
+        this.navController.navigateRoot('apps/travels');
     }
 
     drawComplete() {
@@ -105,6 +109,21 @@ export class TravelDetailPage implements OnInit, AfterViewInit {
             color: 'success'
         });
         toast.present();
+    }
+
+    async presentModal(): Promise<void> {
+        const modal = await this.modalController.create({
+            component: AddObservationPage,
+            componentProps: {
+                observation: ''
+            }
+        });
+
+        modal.onDidDismiss().then(data => {
+            console.log(data);
+        });
+
+        return await modal.present();
     }
 
 }

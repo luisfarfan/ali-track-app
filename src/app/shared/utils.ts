@@ -167,5 +167,5 @@ export class FormHelper {
 }
 
 export const generateMapBoxStaticImage = (longitude: number, latitude: number, zoom?: number) => {
-    return `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom},0.00,0.00/500x300@2x?access_token=${environment.mapboxKey}`;
+    return `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom},0.00,0.00/300x200@2x?access_token=${environment.mapboxKey}`;
 };

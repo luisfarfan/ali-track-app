@@ -23,7 +23,9 @@
                         <ion-item no-padding [color]="t.starttask && t.endtask ? 'success' : 'warning'">
                             <ion-label>{{ t.starttask && t.endtask ? 'Terminado' : 'Servicio en cola' }}</ion-label>
                             <ion-icon *ngIf="t.starttask && t.endtask" name="checkbox-outline"></ion-icon>
-                            <ion-button *ngIf="t.starttask && t.endtask" (click)="goTravelDetail(t.id)" fill="outline" slot="end">Ver</ion-button>
+                            <ion-button *ngIf="t.starttask && t.endtask" (click)="goTravelDetail(t.id)" fill="outline"
+                                        slot="end">Ver
+                            </ion-button>
                         </ion-item>
                     </ion-card-header>
                     <app-preload-image class="user-avatar add-spinner" [ratio]="{w:1, h:1}"

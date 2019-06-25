@@ -1,6 +1,6 @@
 {
-  "name": "alerta-surco-v2",
-  "version": "0.0.1",
+  "name": "tracking-app",
+  "version": "0.0.2",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {

@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    baseUrl: 'http://188.166.63.89:8080/',
+    baseUrl: 'http://188.166.63.89:8000/',
     firebaseConfig: {
         apiKey: 'AIzaSyDLdYtRxj0OWx2CRUYFYvQxJMPiV98knm8',
         authDomain: 'alerta-ciudadana-b2891.firebaseapp.com',

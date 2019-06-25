@@ -5,25 +5,17 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { MyTravelsPage } from './my-travels.page';
-import { SharedModule } from '../../shared/shared.module';
-
-const routes: Routes = [
-    {
-        path: '',
-        component: MyTravelsPage
-    }
-];
+import { AddObservationPage } from './add-observation.page';
 
 @NgModule({
     imports: [
         CommonModule,
-        SharedModule,
         FormsModule,
         IonicModule,
-        RouterModule.forChild(routes)
     ],
-    declarations: [MyTravelsPage]
+    declarations: [AddObservationPage],
+    exports: [AddObservationPage],
+    entryComponents: [AddObservationPage]
 })
-export class MyTravelsPageModule {
+export class AddObservationPageModule {
 }
