@@ -22,6 +22,10 @@ export class UserService {
 
     }
 
+    list(): Observable<Array<IUser>> {
+        return this.http.get<Array<IUser>>(UserEndpoint.listPost);
+    }
+
     add(user: IUser): Observable<IUser> {
         return this.http.post<IUser>(UserEndpoint.listPost, user);
     }

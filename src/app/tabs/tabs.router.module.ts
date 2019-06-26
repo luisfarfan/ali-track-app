@@ -35,6 +35,15 @@ const routes: Routes = [
                 ]
             },
             {
+                path: 'map-detail',
+                children: [
+                    {
+                        path: '',
+                        loadChildren: '../pages/map-detail/map-detail.module#MapDetailPageModule'
+                    }
+                ]
+            },
+            {
                 path: '',
                 redirectTo: '/apps/travels',
                 pathMatch: 'full'

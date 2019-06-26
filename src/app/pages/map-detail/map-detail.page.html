@@ -1,0 +1,13 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Monitor</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <mgl-map *ngIf="init"
+             [style]="'mapbox://styles/mapbox/streets-v9'"
+             [zoom]="[9]"
+             [center]="[-74.50, 40]">
+    </mgl-map>
+</ion-content>
