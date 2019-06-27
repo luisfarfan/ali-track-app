@@ -86,7 +86,8 @@ export class AppComponent {
     }
 
     getRealtimeUbication(): void {
-        const subscription = this.afs.collection('user-tracking', ref => ref.where('user_id', '==', this.user.id)
+        this.afs.collection('user-tracking', ref => ref
+            .where('user_id', '==', this.user.id)
             .where('request', '==', true))
             .stateChanges(['added', 'modified'])
             .subscribe(value => {
@@ -95,8 +96,8 @@ export class AppComponent {
                         .then(coords => {
                             this.latitude = coords.coords.latitude;
                             this.longitude = coords.coords.longitude;
-
                             console.log(coords);
+                            alert('COORDENADAS RECIBIDAS' + this.latitude + ' ' + this.longitude);
 
                             this.afs.collection('user-tracking').doc(value[0].payload.doc.id).update({
                                 point: {
@@ -105,15 +106,22 @@ export class AppComponent {
                                 },
                                 request: false,
                                 done: true
-                            }).then(() => subscription.unsubscribe()).catch(e => {
-                                subscription.unsubscribe();
+                            }).then(() => {
+                                setTimeout(() => {
+                                    this.afs.collection('user-tracking').doc(value[0].payload.doc.id).delete()
+                                        .then(() => alert('COORDENADAS ENVIADAS Y DOCUMENTO BORRADO'));
+                                });
+                            }).catch(e => {
+                                alert('ERROR DE ENVIO DE COORDENADAS');
+                                // subscription.unsubscribe();
                                 setTimeout(() => {
                                     this.getRealtimeUbication();
                                 });
                             });
                         })
                         .catch(e => {
-                            subscription.unsubscribe();
+                            // subscription.unsubscribe();
+                            alert('ERROR DE COORDENADAS');
                             setTimeout(() => {
                                 this.getRealtimeUbication();
                             });

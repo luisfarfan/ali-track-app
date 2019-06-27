@@ -69,15 +69,15 @@ export class MapDetailPage implements OnInit, AfterViewInit {
                         this.realTimeDone = true;
                         this.mapComponent.mapInstance.setCenter([this.realTime.longitude, this.realTime.latitude]);
                         this.presentToast();
+                        // this.afs.collection('user-tracking').doc(value[0].payload.doc.id)
+                        //     .delete()
+                        //     .then(() => {
+                        //         subscription.unsubscribe();
+                        //     });
                     } else {
                         this.realTimeDone = false;
                     }
                     subscription.unsubscribe();
-                    // this.afs.collection('user-tracking').doc(value[0].payload.doc.id)
-                    //     .delete()
-                    //     .then(() => {
-                    //         subscription.unsubscribe();
-                    //     });
                 }
             });
     }
