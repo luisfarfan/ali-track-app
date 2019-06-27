@@ -16,7 +16,7 @@
 
 <ion-content>
     <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button>
+        <ion-fab-button (click)="getRealtimeUbication()">
             <ion-icon name="locate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
@@ -25,10 +25,18 @@
              [zoom]="[12]"
              [center]="[-74.50, 40]">
         <mgl-marker *ngIf="travel?.start_latitude"
-                    [lngLat]="[travel?.start_longitude, travel?.start_latitude]"></mgl-marker>
+                    [lngLat]="[travel?.start_longitude, travel?.start_latitude]">
+            <app-ali-marker></app-ali-marker>
+        </mgl-marker>
 
         <mgl-marker *ngIf="travel?.end_longitude"
-                    [lngLat]="[travel?.end_longitude, travel?.end_latitude]"></mgl-marker>
+                    [lngLat]="[travel?.end_longitude, travel?.end_latitude]">
+            <app-ali-marker></app-ali-marker>
+        </mgl-marker>
+
+        <mgl-marker *ngIf="realTimeDone" [lngLat]="[realTime.longitude, realTime.latitude]">
+            <app-ali-marker [realTime]="true"></app-ali-marker>
+        </mgl-marker>
 
         <mgl-layer *ngIf="source"
                    id="LineString"

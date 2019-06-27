@@ -9,6 +9,7 @@ import { MapDetailPage } from './map-detail.page';
 import { NgxMapboxGLModule } from 'ngx-mapbox-gl';
 import { ListTravelsPage } from '../../modals/list-travels/list-travels.page';
 import { ListTravelsPageModule } from '../../modals/list-travels/list-travels.module';
+import { AliMarkerModule } from '../../components/ali-marker/ali-marker.module';
 
 const routes: Routes = [
     {
@@ -25,7 +26,9 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         NgxMapboxGLModule,
 
-        ListTravelsPageModule
+        ListTravelsPageModule,
+
+        AliMarkerModule
     ],
     declarations: [MapDetailPage]
 })

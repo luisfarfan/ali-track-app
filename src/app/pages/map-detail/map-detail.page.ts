@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MapComponent } from 'ngx-mapbox-gl';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { AddObservationPage } from '../../modals/add-observation/add-observation.page';
 import { IUserTrackingDetail } from '../../interfaces/user';
 import { ListTravelsPage } from '../../modals/list-travels/list-travels.page';
 import { AuthService } from '../../providers/auth.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
     selector: 'app-map-detail',
@@ -19,7 +20,20 @@ export class MapDetailPage implements OnInit, AfterViewInit {
 
     source;
 
-    constructor(private modalController: ModalController, public authService: AuthService) {
+    realTime: {
+        latitude: number;
+        longitude: number
+    } = {
+        latitude: 0,
+        longitude: 0
+    };
+
+    realTimeDone = false;
+
+    constructor(private modalController: ModalController,
+                public authService: AuthService,
+                private afs: AngularFirestore,
+                private toastController: ToastController) {
     }
 
     ngOnInit() {
@@ -33,6 +47,39 @@ export class MapDetailPage implements OnInit, AfterViewInit {
 
     async openTravels(): Promise<void> {
         await this.presentModal();
+    }
+
+    getRealtimeUbication(): void {
+        const subscription = this.afs.collection('user-tracking', ref => ref
+            .where('user_id', '==', this.travel.user.id)
+            .where('request', '==', false))
+            .valueChanges()
+            .subscribe(value => {
+                if (value && value.length === 0) {
+                    this.afs.collection('user-tracking').add({
+                        user_id: this.travel.user.id,
+                        request: true,
+                        point: {latitude: 0, longitude: 0},
+                        done: false
+                    });
+                } else if (value && value.length > 0) {
+                    if ((value[0] as any).point && (value[0] as any).point.latitude) {
+                        this.realTime.latitude = (value[0] as any).point.latitude;
+                        this.realTime.longitude = (value[0] as any).point.longitude;
+                        this.realTimeDone = true;
+                        this.mapComponent.mapInstance.setCenter([this.realTime.longitude, this.realTime.latitude]);
+                        this.presentToast();
+                    } else {
+                        this.realTimeDone = false;
+                    }
+                    subscription.unsubscribe();
+                    // this.afs.collection('user-tracking').doc(value[0].payload.doc.id)
+                    //     .delete()
+                    //     .then(() => {
+                    //         subscription.unsubscribe();
+                    //     });
+                }
+            });
     }
 
     setMarker(travel: IUserTrackingDetail): void {
@@ -75,6 +122,16 @@ export class MapDetailPage implements OnInit, AfterViewInit {
         });
 
         return await modal.present();
+    }
+
+    async presentToast() {
+        const toast = await this.toastController.create({
+            message: 'Ubicación en tiempo real actualizada',
+            duration: 5000,
+            color: 'success',
+            showCloseButton: true
+        });
+        toast.present();
     }
 
 

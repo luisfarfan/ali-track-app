@@ -8,6 +8,10 @@ import { IUser } from './interfaces/user';
 import { Storage } from '@ionic/storage';
 import { KEY_USER_STORAGE } from './const';
 import { Router } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Subject } from 'rxjs';
+import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
     selector: 'app-root',
@@ -33,7 +37,12 @@ export class AppComponent {
 
     user: IUser;
 
+    unsubscribe = new Subject();
+
     @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
+
+    latitude: number;
+    longitude: number;
 
     constructor(
         private platform: Platform,
@@ -41,6 +50,8 @@ export class AppComponent {
         private statusBar: StatusBar,
         public authService: AuthService,
         private storage: Storage,
+        private afs: AngularFirestore,
+        private geolocation: Geolocation
     ) {
         this.initializeApp();
 
@@ -49,6 +60,7 @@ export class AppComponent {
                 this.storage.get(KEY_USER_STORAGE).then(user => {
                     if (user) {
                         this.user = user;
+                        this.getRealtimeUbication();
                     } else {
                         this.user = null;
                     }
@@ -57,6 +69,13 @@ export class AppComponent {
                 this.user = null;
             }
         });
+
+        this.geolocation.watchPosition()
+            .pipe(filter(p => p.coords !== undefined))
+            .subscribe(value => {
+                this.latitude = value.coords.latitude;
+                this.longitude = value.coords.longitude;
+            });
     }
 
     initializeApp() {
@@ -64,5 +83,42 @@ export class AppComponent {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
         });
+    }
+
+    getRealtimeUbication(): void {
+        const subscription = this.afs.collection('user-tracking', ref => ref.where('user_id', '==', this.user.id)
+            .where('request', '==', true))
+            .stateChanges(['added', 'modified'])
+            .subscribe(value => {
+                if (value && value.length) {
+                    this.geolocation.getCurrentPosition()
+                        .then(coords => {
+                            this.latitude = coords.coords.latitude;
+                            this.longitude = coords.coords.longitude;
+
+                            console.log(coords);
+
+                            this.afs.collection('user-tracking').doc(value[0].payload.doc.id).update({
+                                point: {
+                                    longitude: this.longitude,
+                                    latitude: this.latitude
+                                },
+                                request: false,
+                                done: true
+                            }).then(() => subscription.unsubscribe()).catch(e => {
+                                subscription.unsubscribe();
+                                setTimeout(() => {
+                                    this.getRealtimeUbication();
+                                });
+                            });
+                        })
+                        .catch(e => {
+                            subscription.unsubscribe();
+                            setTimeout(() => {
+                                this.getRealtimeUbication();
+                            });
+                        });
+                }
+            });
     }
 }
