@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { KEY_USER_STORAGE } from '../const';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,8 @@ export class AuthService {
 
     constructor(private http: HttpClient,
                 private storage: Storage,
-                private router: Router) {
+                private router: Router,
+                private navController: NavController) {
         this.storage.get(KEY_USER_STORAGE)
             .then(user => {
                 if (user) {
@@ -49,7 +51,7 @@ export class AuthService {
         this.storage.clear()
             .then(() => this.isLogout.next(false));
         if (redirect) {
-            this.router.navigateByUrl('/login');
+            this.navController.navigateRoot('/login');
         }
     }
 }

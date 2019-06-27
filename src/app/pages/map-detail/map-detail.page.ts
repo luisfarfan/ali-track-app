@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { AddObservationPage } from '../../modals/add-observation/add-observation.page';
 import { IUserTrackingDetail } from '../../interfaces/user';
 import { ListTravelsPage } from '../../modals/list-travels/list-travels.page';
+import { AuthService } from '../../providers/auth.service';
 
 @Component({
     selector: 'app-map-detail',
@@ -18,7 +19,7 @@ export class MapDetailPage implements OnInit, AfterViewInit {
 
     source;
 
-    constructor(private modalController: ModalController) {
+    constructor(private modalController: ModalController, public authService: AuthService) {
     }
 
     ngOnInit() {
