@@ -6,6 +6,8 @@ import { IUserTrackingDetail } from '../../interfaces/user';
 import { ListTravelsPage } from '../../modals/list-travels/list-travels.page';
 import { AuthService } from '../../providers/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-map-detail',
@@ -50,18 +52,29 @@ export class MapDetailPage implements OnInit, AfterViewInit {
     }
 
     getRealtimeUbication(): void {
+        const takeUntilSubject = new Subject();
         const subscription = this.afs.collection('user-tracking', ref => ref
             .where('user_id', '==', this.travel.user.id)
             .where('request', '==', false))
             .valueChanges()
             .subscribe(value => {
                 if (value && value.length === 0) {
-                    this.afs.collection('user-tracking').add({
-                        user_id: this.travel.user.id,
-                        request: true,
-                        point: {latitude: 0, longitude: 0},
-                        done: false
-                    });
+                    this.afs.collection('user-tracking', ref => ref
+                        .where('user_id', '==', this.travel.user.id))
+                        .valueChanges()
+                        .pipe(takeUntil(takeUntilSubject))
+                        .subscribe(value1 => {
+                            if (value1 && value1.length === 0) {
+                                this.afs.collection('user-tracking').add({
+                                    user_id: this.travel.user.id,
+                                    request: true,
+                                    point: {latitude: 0, longitude: 0},
+                                    done: false
+                                });
+                            }
+                            takeUntilSubject.next();
+                            takeUntilSubject.complete();
+                        });
                 } else if (value && value.length > 0) {
                     if ((value[0] as any).point && (value[0] as any).point.latitude) {
                         this.realTime.latitude = (value[0] as any).point.latitude;
@@ -69,11 +82,6 @@ export class MapDetailPage implements OnInit, AfterViewInit {
                         this.realTimeDone = true;
                         this.mapComponent.mapInstance.setCenter([this.realTime.longitude, this.realTime.latitude]);
                         this.presentToast();
-                        // this.afs.collection('user-tracking').doc(value[0].payload.doc.id)
-                        //     .delete()
-                        //     .then(() => {
-                        //         subscription.unsubscribe();
-                        //     });
                     } else {
                         this.realTimeDone = false;
                     }

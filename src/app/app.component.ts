@@ -10,7 +10,7 @@ import { KEY_USER_STORAGE } from './const';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, first, switchMap, takeUntil } from 'rxjs/operators';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
@@ -75,6 +75,8 @@ export class AppComponent {
             .subscribe(value => {
                 this.latitude = value.coords.latitude;
                 this.longitude = value.coords.longitude;
+
+                console.log(this.latitude, this.longitude);
             });
     }
 
@@ -92,40 +94,59 @@ export class AppComponent {
             .stateChanges(['added', 'modified'])
             .subscribe(value => {
                 if (value && value.length) {
-                    this.geolocation.getCurrentPosition()
-                        .then(coords => {
-                            this.latitude = coords.coords.latitude;
-                            this.longitude = coords.coords.longitude;
-                            console.log(coords);
-                            alert('COORDENADAS RECIBIDAS' + this.latitude + ' ' + this.longitude);
-
-                            this.afs.collection('user-tracking').doc(value[0].payload.doc.id).update({
-                                point: {
-                                    longitude: this.longitude,
-                                    latitude: this.latitude
-                                },
-                                request: false,
-                                done: true
-                            }).then(() => {
-                                setTimeout(() => {
-                                    this.afs.collection('user-tracking').doc(value[0].payload.doc.id).delete()
-                                        .then(() => alert('COORDENADAS ENVIADAS Y DOCUMENTO BORRADO'));
-                                });
-                            }).catch(e => {
-                                alert('ERROR DE ENVIO DE COORDENADAS');
-                                // subscription.unsubscribe();
-                                setTimeout(() => {
-                                    this.getRealtimeUbication();
-                                });
-                            });
-                        })
-                        .catch(e => {
-                            // subscription.unsubscribe();
-                            alert('ERROR DE COORDENADAS');
-                            setTimeout(() => {
-                                this.getRealtimeUbication();
-                            });
+                    this.afs.collection('user-tracking').doc(value[0].payload.doc.id).update({
+                        point: {
+                            longitude: this.longitude,
+                            latitude: this.latitude
+                        },
+                        request: false,
+                        done: true
+                    }).then(() => {
+                        setTimeout(() => {
+                            this.afs.collection('user-tracking').doc(value[0].payload.doc.id).delete()
+                                .then(() => alert('COORDENADAS ENVIADAS Y DOCUMENTO BORRADO'));
                         });
+                    }).catch(e => {
+                        alert('ERROR DE ENVIO DE COORDENADAS');
+                        // subscription.unsubscribe();
+                        setTimeout(() => {
+                            this.getRealtimeUbication();
+                        });
+                    });
+                    // this.geolocation.getCurrentPosition()
+                    //     .then(coords => {
+                    //         this.latitude = coords.coords.latitude;
+                    //         this.longitude = coords.coords.longitude;
+                    //         console.log(coords);
+                    //         alert('COORDENADAS RECIBIDAS' + this.latitude + ' ' + this.longitude);
+                    //
+                    //         this.afs.collection('user-tracking').doc(value[0].payload.doc.id).update({
+                    //             point: {
+                    //                 longitude: this.longitude,
+                    //                 latitude: this.latitude
+                    //             },
+                    //             request: false,
+                    //             done: true
+                    //         }).then(() => {
+                    //             setTimeout(() => {
+                    //                 this.afs.collection('user-tracking').doc(value[0].payload.doc.id).delete()
+                    //                     .then(() => alert('COORDENADAS ENVIADAS Y DOCUMENTO BORRADO'));
+                    //             });
+                    //         }).catch(e => {
+                    //             alert('ERROR DE ENVIO DE COORDENADAS');
+                    //             // subscription.unsubscribe();
+                    //             setTimeout(() => {
+                    //                 this.getRealtimeUbication();
+                    //             });
+                    //         });
+                    //     })
+                    //     .catch(e => {
+                    //         // subscription.unsubscribe();
+                    //         alert('ERROR DE COORDENADAS');
+                    //         setTimeout(() => {
+                    //             this.getRealtimeUbication();
+                    //         });
+                    //     });
                 }
             });
     }
