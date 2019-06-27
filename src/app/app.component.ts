@@ -75,8 +75,6 @@ export class AppComponent {
             .subscribe(value => {
                 this.latitude = value.coords.latitude;
                 this.longitude = value.coords.longitude;
-
-                console.log(this.latitude, this.longitude);
             });
     }
 
@@ -104,49 +102,14 @@ export class AppComponent {
                     }).then(() => {
                         setTimeout(() => {
                             this.afs.collection('user-tracking').doc(value[0].payload.doc.id).delete()
-                                .then(() => alert('COORDENADAS ENVIADAS Y DOCUMENTO BORRADO'));
+                                .then(() => '');
                         });
                     }).catch(e => {
-                        alert('ERROR DE ENVIO DE COORDENADAS');
                         // subscription.unsubscribe();
                         setTimeout(() => {
                             this.getRealtimeUbication();
                         });
                     });
-                    // this.geolocation.getCurrentPosition()
-                    //     .then(coords => {
-                    //         this.latitude = coords.coords.latitude;
-                    //         this.longitude = coords.coords.longitude;
-                    //         console.log(coords);
-                    //         alert('COORDENADAS RECIBIDAS' + this.latitude + ' ' + this.longitude);
-                    //
-                    //         this.afs.collection('user-tracking').doc(value[0].payload.doc.id).update({
-                    //             point: {
-                    //                 longitude: this.longitude,
-                    //                 latitude: this.latitude
-                    //             },
-                    //             request: false,
-                    //             done: true
-                    //         }).then(() => {
-                    //             setTimeout(() => {
-                    //                 this.afs.collection('user-tracking').doc(value[0].payload.doc.id).delete()
-                    //                     .then(() => alert('COORDENADAS ENVIADAS Y DOCUMENTO BORRADO'));
-                    //             });
-                    //         }).catch(e => {
-                    //             alert('ERROR DE ENVIO DE COORDENADAS');
-                    //             // subscription.unsubscribe();
-                    //             setTimeout(() => {
-                    //                 this.getRealtimeUbication();
-                    //             });
-                    //         });
-                    //     })
-                    //     .catch(e => {
-                    //         // subscription.unsubscribe();
-                    //         alert('ERROR DE COORDENADAS');
-                    //         setTimeout(() => {
-                    //             this.getRealtimeUbication();
-                    //         });
-                    //     });
                 }
             });
     }
