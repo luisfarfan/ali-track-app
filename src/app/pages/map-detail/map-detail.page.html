@@ -5,6 +5,11 @@
 </ion-header>
 
 <ion-content>
+    <ion-fab vertical="top" horizontal="end" slot="fixed">
+        <ion-fab-button>
+            <ion-icon name="locate"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
     <mgl-map *ngIf="init"
              [style]="'mapbox://styles/mapbox/streets-v9'"
              [zoom]="[12]"
@@ -14,6 +19,14 @@
 
         <mgl-marker *ngIf="travel?.end_longitude"
                     [lngLat]="[travel?.end_longitude, travel?.end_latitude]"></mgl-marker>
+
+        <mgl-layer *ngIf="source"
+                   id="LineString"
+                   type="line"
+                   [source]="source"
+                   [paint]="{'line-color': '#BF93E4','line-width': 5}"
+                   [layout]="{'line-join': 'round','line-cap': 'round'}">
+        </mgl-layer>
     </mgl-map>
 </ion-content>
 

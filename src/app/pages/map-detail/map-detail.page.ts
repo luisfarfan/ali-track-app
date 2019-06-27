@@ -16,6 +16,8 @@ export class MapDetailPage implements OnInit, AfterViewInit {
 
     travel: IUserTrackingDetail;
 
+    source;
+
     constructor(private modalController: ModalController) {
     }
 
@@ -36,7 +38,29 @@ export class MapDetailPage implements OnInit, AfterViewInit {
         this.travel = travel;
         if (this.travel.start_latitude) {
             this.mapComponent.mapInstance.setCenter([this.travel.start_longitude, this.travel.start_latitude]);
-            // this.mapComponent.center = [this.travel.start_latitude, this.travel.start_longitude];
+            if (this.travel.start_latitude && this.travel.end_latitude) {
+                this.source = {
+                    type: 'geojson',
+                    data: {
+                        type: 'FeatureCollection',
+                        features: [{
+                            type: 'Feature',
+                            geometry: {
+                                type: 'LineString',
+                                properties: {},
+                                coordinates: [
+                                    [this.travel.start_longitude, this.travel.start_latitude],
+                                    [this.travel.end_longitude, this.travel.end_latitude]
+                                ]
+                            }
+                        }]
+                    }
+                };
+            } else {
+                this.source = null;
+            }
+        } else {
+            this.source = null;
         }
     }
 
