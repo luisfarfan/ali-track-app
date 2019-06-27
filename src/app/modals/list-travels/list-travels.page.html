@@ -1,9 +1,33 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>list-travels</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-title>Lista de viajes</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <ion-item>
+        <ion-label>Seleccione usuario</ion-label>
+        <ion-select (ionChange)="userSelectChange($event)">
+            <ion-select-option *ngFor="let user of users"
+                               [value]="user.id">{{ user.nombre + ' ' + user.apellido_paterno  }}
+            </ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-list>
+        <ion-item (click)="selectTravel(travel)" *ngFor="let travel of travels">
+            <ion-label text-wrap>
+                <ion-text color="primary">
+                    <h3>{{ travel.user.nombre + ' ' + travel.user.apellido_paterno }}</h3>
+                </ion-text>
+                <ion-text color="secondary">
+                    <p>{{ (travel.starttask ? 'Inicio ' + (travel.starttask | date:'hh:mm') : '') + '  ' + (travel.endtask ? 'Termino ' + (travel.endtask | date:'hh:mm') : '')}}</p>
+                </ion-text>
+                <ion-text color="secondary">
+                    <p>{{ travel.starttask && travel.endtask ? 'Servicio finalizado' : travel.starttask && !travel.endtask ? 'Servicio en curso' : 'Servicio pendiente' }}</p>
+                </ion-text>
+            </ion-label>
+        </ion-item>
+    </ion-list>
 
 </ion-content>

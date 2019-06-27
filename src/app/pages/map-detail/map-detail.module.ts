@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { MapDetailPage } from './map-detail.page';
 import { NgxMapboxGLModule } from 'ngx-mapbox-gl';
+import { ListTravelsPage } from '../../modals/list-travels/list-travels.page';
+import { ListTravelsPageModule } from '../../modals/list-travels/list-travels.module';
 
 const routes: Routes = [
     {
@@ -21,7 +23,9 @@ const routes: Routes = [
         FormsModule,
         IonicModule,
         RouterModule.forChild(routes),
-        NgxMapboxGLModule
+        NgxMapboxGLModule,
+
+        ListTravelsPageModule
     ],
     declarations: [MapDetailPage]
 })

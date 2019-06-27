@@ -1,0 +1,7 @@
+<div *ngIf="!realTime; else realTimeImage">
+    <ion-img class="marker" [src]="'/assets/img/bus.png'" alt=""></ion-img>
+</div>
+
+<ng-template #realTimeImage>
+    <ion-img class="marker" [src]="'/assets/img/bus-realtime.png'" alt=""></ion-img>
+</ng-template>

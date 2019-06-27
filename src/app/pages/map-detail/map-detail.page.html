@@ -7,7 +7,18 @@
 <ion-content>
     <mgl-map *ngIf="init"
              [style]="'mapbox://styles/mapbox/streets-v9'"
-             [zoom]="[9]"
+             [zoom]="[12]"
              [center]="[-74.50, 40]">
+        <mgl-marker *ngIf="travel?.start_latitude"
+                    [lngLat]="[travel?.start_longitude, travel?.start_latitude]"></mgl-marker>
+
+        <mgl-marker *ngIf="travel?.end_longitude"
+                    [lngLat]="[travel?.end_longitude, travel?.end_latitude]"></mgl-marker>
     </mgl-map>
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button shape="round" expand="full" (click)="openTravels()">Ver viajes</ion-button>
+    </ion-toolbar>
+</ion-footer>
