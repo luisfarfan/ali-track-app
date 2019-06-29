@@ -1,13 +1,21 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MapComponent } from 'ngx-mapbox-gl';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, PopoverController, ToastController } from '@ionic/angular';
 import { AddObservationPage } from '../../modals/add-observation/add-observation.page';
-import { IUserTrackingDetail } from '../../interfaces/user';
+import { IUser, IUserTrackingDetail } from '../../interfaces/user';
 import { ListTravelsPage } from '../../modals/list-travels/list-travels.page';
 import { AuthService } from '../../providers/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import to from 'await-to-js';
+import { UserService } from '../../providers/user.service';
+import { UserDetailComponent } from '../../components/user-detail/user-detail.component';
+
+export interface IUserWithTracking extends IUser {
+    latitude?: number;
+    longitude?: number;
+}
 
 @Component({
     selector: 'app-map-detail',
@@ -32,13 +40,20 @@ export class MapDetailPage implements OnInit, AfterViewInit {
 
     realTimeDone = false;
 
+    users: Array<IUserWithTracking>;
+
+    usersFiltered: Array<IUserWithTracking>;
+
     constructor(private modalController: ModalController,
                 public authService: AuthService,
                 private afs: AngularFirestore,
-                private toastController: ToastController) {
+                private toastController: ToastController,
+                private userService: UserService,
+                private popoverController: PopoverController) {
     }
 
     ngOnInit() {
+        this.getUsers();
     }
 
     ngAfterViewInit(): void {
@@ -51,22 +66,31 @@ export class MapDetailPage implements OnInit, AfterViewInit {
         await this.presentModal();
     }
 
-    getRealtimeUbication(): void {
+    async getUsers(): Promise<void> {
+        const [error, users] = await to(this.userService.list().toPromise());
+        this.users = users;
+    }
+
+    findRealTimeUbications(): void {
+        this.users.forEach(u => this.getRealtimeUbication(u));
+    }
+
+    getRealtimeUbication(user: IUserWithTracking): void {
         const takeUntilSubject = new Subject();
         const subscription = this.afs.collection('user-tracking', ref => ref
-            .where('user_id', '==', this.travel.user.id)
+            .where('user_id', '==', user.id)
             .where('request', '==', false))
             .valueChanges()
             .subscribe(value => {
                 if (value && value.length === 0) {
                     this.afs.collection('user-tracking', ref => ref
-                        .where('user_id', '==', this.travel.user.id))
+                        .where('user_id', '==', user.id))
                         .valueChanges()
                         .pipe(takeUntil(takeUntilSubject))
                         .subscribe(value1 => {
                             if (value1 && value1.length === 0) {
                                 this.afs.collection('user-tracking').add({
-                                    user_id: this.travel.user.id,
+                                    user_id: user.id,
                                     request: true,
                                     point: {latitude: 0, longitude: 0},
                                     done: false
@@ -77,17 +101,20 @@ export class MapDetailPage implements OnInit, AfterViewInit {
                         });
                 } else if (value && value.length > 0) {
                     if ((value[0] as any).point && (value[0] as any).point.latitude) {
-                        this.realTime.latitude = (value[0] as any).point.latitude;
-                        this.realTime.longitude = (value[0] as any).point.longitude;
-                        this.realTimeDone = true;
-                        this.mapComponent.mapInstance.setCenter([this.realTime.longitude, this.realTime.latitude]);
+                        const indexUser = this.users.findIndex(u => u.id === user.id);
+                        this.users[indexUser].longitude = (value[0] as any).point.longitude;
+                        this.users[indexUser].latitude = (value[0] as any).point.latitude;
+                        this.validUsersInMapForRealtime();
+                        this.mapComponent.mapInstance.setCenter([this.users[indexUser].longitude, this.users[indexUser].latitude]);
                         this.presentToast();
-                    } else {
-                        this.realTimeDone = false;
                     }
                     subscription.unsubscribe();
                 }
             });
+    }
+
+    private validUsersInMapForRealtime(): void {
+        this.usersFiltered = this.users.filter(u => u.latitude && u.longitude);
     }
 
     setMarker(travel: IUserTrackingDetail): void {
@@ -123,6 +150,9 @@ export class MapDetailPage implements OnInit, AfterViewInit {
     async presentModal(): Promise<void> {
         const modal = await this.modalController.create({
             component: ListTravelsPage,
+            componentProps: {
+                users: this.users
+            }
         });
 
         modal.onDidDismiss().then(data => {
@@ -140,6 +170,17 @@ export class MapDetailPage implements OnInit, AfterViewInit {
             showCloseButton: true
         });
         toast.present();
+    }
+
+    async presentPopover(user: IUser) {
+        const popover = await this.popoverController.create({
+            component: UserDetailComponent,
+            translucent: true,
+            componentProps: {
+                user
+            }
+        });
+        return await popover.present();
     }
 
 

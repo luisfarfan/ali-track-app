@@ -16,7 +16,7 @@
 
 <ion-content>
     <ion-fab vertical="top" horizontal="end" slot="fixed">
-        <ion-fab-button (click)="getRealtimeUbication()">
+        <ion-fab-button (click)="findRealTimeUbications()">
             <ion-icon name="locate"></ion-icon>
         </ion-fab-button>
     </ion-fab>
@@ -34,8 +34,8 @@
             <app-ali-marker></app-ali-marker>
         </mgl-marker>
 
-        <mgl-marker *ngIf="realTimeDone" [lngLat]="[realTime.longitude, realTime.latitude]">
-            <app-ali-marker [realTime]="true"></app-ali-marker>
+        <mgl-marker *ngFor="let u of usersFiltered" [lngLat]="[u.longitude, u.latitude]">
+            <ngx-avatar (click)="presentPopover(u)" [name]="u.nombre + ' ' + u.apellido_paterno"></ngx-avatar>
         </mgl-marker>
 
         <mgl-layer *ngIf="source"

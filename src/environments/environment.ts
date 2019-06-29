@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    baseUrl: 'http://188.166.63.89:8000/',
+    baseUrl: 'https://mighty-ocean-98328.herokuapp.com/',
     firebaseConfig: {
         apiKey: 'AIzaSyABMQ-VsEjcJkJSpTs-XcEjfhnZxnE94Ik',
         authDomain: 'tracking-app-c0356.firebaseapp.com',

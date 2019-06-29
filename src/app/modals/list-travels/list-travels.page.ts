@@ -12,7 +12,7 @@ import { ModalController } from '@ionic/angular';
     styleUrls: ['./list-travels.page.scss'],
 })
 export class ListTravelsPage implements OnInit, OnDestroy {
-    users: Array<IUser>;
+    @Input() users: Array<IUser>;
     travels: Array<IUserTrackingDetail>;
 
     userControl = new FormControl();
@@ -20,7 +20,7 @@ export class ListTravelsPage implements OnInit, OnDestroy {
     unsubscribe = new Subject();
 
     constructor(private userService: UserService, public modalController: ModalController) {
-        this.getUsers();
+        // this.getUsers();
     }
 
     ngOnInit() {
